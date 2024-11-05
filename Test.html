@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Weight Tracker with BMI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .disclaimer {
+            font-size: 10pt;
+            font-weight: lighter;
+        }
+        .footer {
+            font-size: 8pt;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Pregnancy Weight Tracker with BMI</h2>
+        <div class="input-group">
+            <label for="initialWeight">Initial Weight (lbs):</label>
+            <input type="number" id="initialWeight" placeholder="Enter initial weight">
+        </div>
+        <div class="input-group">
+            <label for="height">Height (inches):</label>
+            <input type="number" id="height" placeholder="Enter height in inches">
+        </div>
+        <div class="input-group">
+            <label for="currentWeight">Current Weight (lbs):</label>
+            <input type="number" id="currentWeight" placeholder="Enter current weight">
+        </div>
+        <div class="input-group">
+            <label for="week">Pregnancy Week:</label>
+            <input type="number" id="week" placeholder="Enter current week (1-40)" min="1" max="40">
+        </div>
+        <button onclick="checkWeightStatus()">Check Weight Status</button>
+        <div class="result" id="bmi"></div>
+        <div class="result" id="result"></div>
+
+        <div class="disclaimer" id="disclaimer">
+            <p>
+                This tool was built by Caleb Foreman (<a href="https://github.com/Caleb4man">Caleb4man</a>) to reassure his own wife. 
+                This tool is not designed to diagnose or treat any disease.
+            </p>
+            <div class="footer">
+                <p>
+                    Copyright 2024 Caleb Foreman
+                </p>
+                <p>
+                    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and 
+                    associated documentation files (the “Software”), to deal in the Software without restriction, including 
+                    without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
+                    of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+                    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+                </p>
+                <p>
+                    THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+                    WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+                    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+                    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="PregnancyWeightTracker.js"></script>
+    <script>
+        function checkWeightStatus() {
+            // Get input values
+            const initialWeight = parseFloat(document.getElementById("initialWeight").value);
+            const height = parseFloat(document.getElementById("height").value);
+            const currentWeight = parseFloat(document.getElementById("currentWeight").value);
+            const week = parseInt(document.getElementById("week").value);
+
+            // Validate inputs
+            if (isNaN(initialWeight) || isNaN(height) || isNaN(currentWeight) || isNaN(week)) {
+                document.getElementById("result").innerText = "Please enter valid numbers for all fields.";
+                return;
+            }
+
+            try {
+                // Create a new instance of PregnancyWeightTracker
+                const tracker = new PregnancyWeightTracker(initialWeight, height);
+                tracker.updateWeight(currentWeight);
+                tracker.updateWeek(week);
+
+                // Display BMI
+                document.getElementById("bmi").innerText = `BMI: ${tracker.bmi.toFixed(2)} (Based on initial weight)`;
+
+                // Get and display the weight gain status
+                const status = tracker.getWeightGainStatus();
+                document.getElementById("result").innerText = status;
+            } catch (error) {
+                document.getElementById("result").innerText = error.message;
+            }
+        }
+    </script>
+</body>
+</html>
